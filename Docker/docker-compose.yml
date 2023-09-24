@@ -1,0 +1,60 @@
+---
+version: "2"
+
+services:
+
+  plex:
+    image: jaymoulin/plex:1.24.5.5173-armhf
+    expose:
+      - 32400
+      - 33400
+    hostname: serverpi
+    volumes:
+      - /mnt/usb1/Plex Media Server:/root/Library/Application Support/Plex Media Server
+      - /mnt/usb1/Anime:/media/anime
+      - /mnt/usb1/Peliculas:/media/movies
+      - /mnt/usb1/Peliculas-Anime:/media/movies-anime
+      - /mnt/usb1/Peliculas-Disney:/media/movies-animation+disney
+      - /mnt/usb1/Series:/media/series
+      - /mnt/usb1/tmp:/tmp
+    restart: unless-stopped
+    networks: 
+      lan:
+        ipv4_address: 192.168.13.16
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+    environment:
+      TZ: 'America/Uruguay/Montevideo'
+      WEBPASSWORD: 'Ardilla13'
+    # Volumes store your data between container upgrades
+    volumes:
+      - './etc-pihole/:/etc/pihole/'
+      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    networks: 
+      lan:
+        ipv4_address: 192.168.13.17
+
+networks:
+  lan:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "192.168.13.0/24"       
+          gateway: "192.168.13.1"
