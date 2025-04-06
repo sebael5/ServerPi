@@ -1,2 +1,2 @@
 # ServerPi
-config setup for the serverpi
+config setup for a small home server using a raspberry pi
