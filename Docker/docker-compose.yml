@@ -8,19 +8,16 @@ services:
     expose:
       - 32400
       - 33400
-    hostname: serverpi
+    hostname: {Server Name}
     volumes:
-      - /mnt/usb1/Plex Media Server:/root/Library/Application Support/Plex Media Server
-      - /mnt/usb1/Anime:/media/anime
-      - /mnt/usb1/Peliculas:/media/movies
-      - /mnt/usb1/Peliculas-Anime:/media/movies-anime
-      - /mnt/usb1/Peliculas-Disney:/media/movies-animation+disney
-      - /mnt/usb1/Series:/media/series
-      - /mnt/usb1/tmp:/tmp
+      - /{storage mount point path}/Plex Media Server:/root/Library/Application Support/Plex Media Server
+      - /{storage mount point path}/{libray1}:/{user}/{library1}
+      - /{storage mount point path}/{library2}:/{user}/{library2}
+      - /{storage mount point path}/tmp:/tmp
     restart: unless-stopped
     networks: 
       lan:
-        ipv4_address: 192.168.13.16
+        ipv4_address: {IP Address}
 
   pihole:
     container_name: pihole
@@ -31,8 +28,8 @@ services:
       - "67:67/udp"
       - "80:80/tcp"
     environment:
-      TZ: 'America/Uruguay/Montevideo'
-      WEBPASSWORD: 'Ardilla13'
+      TZ: '{Continent}/{Country}/{City}'
+      WEBPASSWORD: '{Password}'
     # Volumes store your data between container upgrades
     volumes:
       - './etc-pihole/:/etc/pihole/'
@@ -47,7 +44,7 @@ services:
     restart: unless-stopped
     networks: 
       lan:
-        ipv4_address: 192.168.13.17
+        ipv4_address: {IP Address}
 
 networks:
   lan:
@@ -56,5 +53,5 @@ networks:
       parent: eth0
     ipam:
       config:
-        - subnet: "192.168.13.0/24"       
-          gateway: "192.168.13.1"
+        - subnet: "{IP Address}/24"       
+          gateway: "{IP Address}"
