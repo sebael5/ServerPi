@@ -1,3 +1,4 @@
 # ServerPi
-config setup for a small home server for Plex and Pihole services 
-running in Docker containers using a Raspberry pi
+Config setup of a Raspberry pi for a small home server 
+running Plex and Pihole services in Docker containers
+utilizing docker-compose, bash scripts and ansible playbooks 
